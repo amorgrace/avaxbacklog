@@ -29,10 +29,11 @@ SECRET_KEY = 'django-insecure-=kwm*1rbq$n^)o8pw^71$bgw4wm=257o+)i$=13r8^42qx8y!g
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = [
-#     'localhost',
-#     '127.0.0.1',
-# ]
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'avaxbacklog.onrender.com',
+]
 
 # CORS_ALLOWED_ORIGINS = [
 #     'http://localhost:5173/',
