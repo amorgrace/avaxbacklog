@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .serializers import UserRegisterSerializer, UserSerializer
 from dj_rest_auth.views import LoginView, LogoutView
+from rest_framework.permissions import AllowAny
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [AllowAny]
+    authentication_classes = []  # Explicitly disable authentication (including CSRF)
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
