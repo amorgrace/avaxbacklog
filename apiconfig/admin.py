@@ -12,6 +12,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'fullname')}),
         ('Financial Info', {'fields': ('main', 'profit',)}),
+        ('KYC Info', {'fields': ('kyc_status', 'kyc_photo')}),
     )
 
     # readonly_fields = ('total',)

@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
     total = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     class Meta:
         model = CustomUser
-        fields = ('id', 'fullname', 'email', 'main', 'profit', 'total')
+        fields = ('id', 'fullname', 'email', 'main', 'profit', 'total', 'kyc_status',)
 
 class CustomTokenSerializer(serializers.ModelSerializer):
     user = UserSerializer()

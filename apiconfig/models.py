@@ -32,6 +32,27 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     main = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     profit = models.DecimalField(default=0, max_digits=12, decimal_places=2)
 
+    KYC_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_review', 'In Review'),
+        ('confirmed', 'Confirmed'),
+    ]
+
+    kyc_status = models.CharField(
+        max_length=20,
+        choices=KYC_STATUS_CHOICES,
+        default='pending'
+    )
+
+    KYC_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_review', 'In Review'),
+        ('confirmed', 'Confirmed'),
+    ]
+
+    kyc_photo = models.ImageField(upload_to='kyc_photos/', null=True, blank=True)
+
+    # this @property is called when we need to define total so that django knows it is a property of the user
     @property
     def total(self):
         return self.main + self.profit
