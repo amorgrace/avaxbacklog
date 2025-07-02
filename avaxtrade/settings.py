@@ -35,11 +35,11 @@ ALLOWED_HOSTS = [
     'avaxbacklog.onrender.com',
 ]
 
-# CORS_ALLOWED_ORIGINS = [
-#     'http://localhost:5173/',
-#     'https://avaxtrade.vercel.app/',
+CORS_ALLOWED_ORIGINS = [
+    'https://avaxtrade.vercel.app',
+    'http://localhost:5173',
     
-# ]
+]
 
 # Application definition
 AUTH_USER_MODEL = 'apiconfig.CustomUser'
