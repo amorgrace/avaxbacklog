@@ -29,6 +29,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
+    main = models.DecimalField(default=0, max_digits=12, decimal_places=2)
+    profit = models.DecimalField(default=0, max_digits=12, decimal_places=2)
+
+    @property
+    def total(self):
+        return self.main + self.profit
+
+
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['fullname']
 

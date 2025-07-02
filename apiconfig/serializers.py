@@ -2,6 +2,8 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
+
+
 CustomUser = get_user_model()  # Call the function to get the model
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -21,9 +23,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return user
 
 class UserSerializer(serializers.ModelSerializer):
+    total = serializers.DecimalField(source='total', max_digits=12, decimal_places=2, read_only=True)
     class Meta:
         model = CustomUser
-        fields = ('fullname', 'email')
+        fields = ('id', 'fullname', 'email', 'main', 'profit', 'total')
 
 class CustomTokenSerializer(serializers.ModelSerializer):
     user = UserSerializer()
