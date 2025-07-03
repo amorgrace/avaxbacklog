@@ -27,9 +27,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'fullname', 'email', 'main', 'profit', 'total', 'kyc_status',)
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'main': {'read_only': True},
+            'profit': {'read_only': True},
+            'kyc_status': {'read_only': True},
+            'fullname': {'read_only': True},
+            'email': {'read_only': True},
+            
+        }
 
 class CustomTokenSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = Token
         fields = ('key', 'user')
+        extra_kwargs = {'key': {'read_only': True}}
