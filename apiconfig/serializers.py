@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from .models import RecentTransaction
 
 
 
@@ -43,3 +44,14 @@ class CustomTokenSerializer(serializers.ModelSerializer):
         model = Token
         fields = ('key', 'user')
         extra_kwargs = {'key': {'read_only': True}}
+
+
+class RecentTransactionSerializer(serializers.ModelSerializer):
+    time_since_created = serializers.SerializerMethodField
+
+    class Meta:
+        model = RecentTransaction
+        fields = '__all__'
+
+    def get_time_since_created(self, obj):
+        return obj.time_since_created()

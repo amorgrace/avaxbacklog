@@ -66,3 +66,37 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+class RecentTransaction(models.Model):
+    CRYPTO_CHOICES = [
+        ('BTC', 'Bitcoin'),
+        ('ETH', 'Ethereum'),
+        ('BSC', 'Binance Smart Chain'),
+        ('AVAX', 'Avalanche'),
+        ('MATIC', 'Polygon'),
+    ]
+
+    TYPE_CHOICES = [
+        ('deposit', 'Deposit'),
+        ('withdrawal', 'Withdrawal'),
+
+    ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+    ]
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='transactions')
+    crypto_type = models.CharField(max_length=10, choices=CRYPTO_CHOICES)
+    transaction_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
+    transaction_status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    amount = models.DecimalField(max_digits=18, decimal_places=8)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.crypto_type} - {self.transaction_type}"
+    
+    def time_since_created(self):
+        from django.utils.timesince import timesince
+        return timesince(self.created_at) + " ago"

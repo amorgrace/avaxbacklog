@@ -5,7 +5,8 @@ from rest_framework.exceptions import ValidationError
 from .serializers import UserRegisterSerializer, UserSerializer
 from dj_rest_auth.views import LoginView, LogoutView
 from rest_framework.permissions import AllowAny
-
+from .serializers import RecentTransactionSerializer
+from .models import RecentTransaction
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
@@ -54,3 +55,11 @@ class CustomLogoutView(LogoutView):
         response = super().post(request, *args, **kwargs)
         response.data = {'message': 'Logout successful.'}
         return response
+
+
+class UserRecentTransactionListView(generics.ListAPIView):
+    serializer_class = RecentTransactionSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return RecentTransaction.objects.filter(user=self.request.user).order_by('-created_at')
