@@ -55,3 +55,8 @@ class RecentTransactionSerializer(serializers.ModelSerializer):
 
     def get_time_since_created(self, obj):
         return obj.time_since_created()
+    
+
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)

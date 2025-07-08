@@ -4,9 +4,10 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from .serializers import UserRegisterSerializer, UserSerializer
 from dj_rest_auth.views import LoginView, LogoutView
-from rest_framework.permissions import AllowAny
-from .serializers import RecentTransactionSerializer
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .serializers import RecentTransactionSerializer, ChangePasswordSerializer
 from .models import RecentTransaction
+from rest_framework.views import APIView
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
@@ -63,3 +64,25 @@ class UserRecentTransactionListView(generics.ListAPIView):
 
     def get_queryset(self):
         return RecentTransaction.objects.filter(user=self.request.user).order_by('-created_at')
+    
+
+class ChangePassword(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        current_password = serializer.validated_data['current_password']
+        new_password = serializer.validated_data['current_password']
+        
+        if not user.check_password(current_password):
+            return Response({'error': 'Current Password is incorrect!'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        if not new_password or len(new_password) < 8:
+            return Response({'error': 'New password must be at least 8 characters!'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+        
+        user.set_password(new_password)
+        user.save()
+
+        return Response({'detail': 'Password updated successfully.'}, status=status.HTTP_200_OK)
