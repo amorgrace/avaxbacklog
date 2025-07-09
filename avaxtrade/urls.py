@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.http import JsonResponse
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 from apiconfig.views import UserRecentTransactionListView
 
 def health_check(request):
-    return JsonResponse({'status': '200'})
+    try:
+        User = get_user_model()
+        User.objects.exists()
+        return HttpResponse("Render works Successful", content_type="text/plain", status=200)
+    except Exception:
+        return HttpResponse("db_error", content_type="text/plain", status=503)
 
 
 urlpatterns = [
