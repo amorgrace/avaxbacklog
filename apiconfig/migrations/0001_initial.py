@@ -10,8 +10,10 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0014_alter_user_email'),
+        ('auth', '0001_initial'),
+        ('contenttypes', '0002_remove_content_type_name'),
     ]
+
 
     operations = [
         migrations.CreateModel(
