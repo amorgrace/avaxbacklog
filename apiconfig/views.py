@@ -39,7 +39,7 @@ class CustomLoginView(LoginView):
             serializer.is_valid(raise_exception=True)
         except ValidationError as e:
             return Response({
-                'message': 'Login failed.',
+                'message': 'Login failed - Incorrect email or Password.',
                 'errors': e.detail
             }, status=status.HTTP_400_BAD_REQUEST)
         

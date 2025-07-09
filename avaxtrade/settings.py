@@ -47,6 +47,7 @@ CORS_ALLOWED_ORIGINS = [
 AUTH_USER_MODEL = 'apiconfig.CustomUser'
 
 INSTALLED_APPS = [
+    'jazzmin',  
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -59,6 +60,8 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'corsheaders',
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -171,3 +174,12 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+JAZZMIN_SETTINGS = {
+    "site_title": "AVAXTRADE ADMIN",
+    "site_header": "Avaxtrade Admin Panel",
+    "welcome_sign": "Welcome to Avax Workstation",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "related_modal_active": True,
+}
