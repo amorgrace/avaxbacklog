@@ -75,7 +75,7 @@ class ChangePassword(APIView):
 
         user = request.user
         current_password = serializer.validated_data['current_password']
-        new_password = serializer.validated_data['current_password']
+        new_password = serializer.validated_data['new_password']
         
         if not user.check_password(current_password):
             return Response({'error': 'Current Password is incorrect!'}, status=status.HTTP_406_NOT_ACCEPTABLE)
