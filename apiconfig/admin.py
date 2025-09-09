@@ -1,22 +1,29 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, RecentTransaction
+
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     ordering = ['email']
-    # Display in list view
-    list_display = ('email', 'fullname', 'main', 'profit',)
 
-    # Show in the form view
+    list_display = ('email', 'fullname', 'main', 'profit', 'is_staff', 'is_active', 'is_superuser')
+
     fieldsets = (
         (None, {'fields': ('email', 'password', 'fullname')}),
-        ('Financial Info', {'fields': ('main', 'profit',)}),
+        ('Financial Info', {'fields': ('main', 'profit')}),
         ('KYC Info', {'fields': ('kyc_status', 'kyc_photo')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important Dates', {'fields': ('last_login',)}),
+    )
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'fullname', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser'),
+        }),
     )
 
     # readonly_fields = ('total',)
-
-    exclude = ('groups', 'user_permissions', 'is_staff', 'is_active', 'last_login',)
 
 @admin.register(RecentTransaction)
 class RecentTransactionAdmin(admin.ModelAdmin):
