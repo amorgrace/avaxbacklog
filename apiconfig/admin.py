@@ -16,7 +16,7 @@ class CustomUserAdmin(UserAdmin):
 
     # readonly_fields = ('total',)
 
-    exclude = ('groups', 'user_permissions', 'is_staff', 'is_active', 'is_superuser', 'last_login',)
+    exclude = ('groups', 'user_permissions', 'is_staff', 'is_active', 'last_login',)
 
 @admin.register(RecentTransaction)
 class RecentTransactionAdmin(admin.ModelAdmin):
