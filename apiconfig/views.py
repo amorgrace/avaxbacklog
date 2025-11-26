@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from .serializers import UserRegisterSerializer, UserSerializer
 from dj_rest_auth.views import LoginView, LogoutView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import RecentTransactionSerializer, ChangePasswordSerializer
+from .serializers import RecentTransactionSerializer, ChangePasswordSerializer, WithdrawalSerializer
 from .models import RecentTransaction
 from rest_framework.views import APIView
 class RegisterView(generics.CreateAPIView):
@@ -86,3 +86,23 @@ class ChangePassword(APIView):
         user.save()
 
         return Response({'detail': 'Password updated successfully.'}, status=status.HTTP_200_OK)
+
+
+class Withdrawal(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = WithdrawalSerializer(
+            data=request.data,
+            context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        tx = serializer.save()
+
+        return Response({
+            "message": "Withdrawal initiated",
+            "transaction_id": tx.id,
+            "status": tx.transaction_status,
+            "crypto": tx.crypto_type,
+            "amount": tx.amount
+        }, status=201)
