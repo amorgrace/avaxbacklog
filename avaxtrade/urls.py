@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
-from apiconfig.views import UserRecentTransactionListView
+from apiconfig.views import UserRecentTransactionListView, Withdrawal
+
 
 def health_check(request):
     try:
@@ -32,6 +33,7 @@ def health_check(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('apiconfig.urls')),
+    path("api/withdraw/", Withdrawal.as_view(), name="withdraw"),
     path('ping/', health_check ),
     path('api/transactions/', UserRecentTransactionListView.as_view(), name='transaction')
 ]
