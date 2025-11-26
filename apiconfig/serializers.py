@@ -64,16 +64,16 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class WithdrawalSerializer(serializers.ModelSerializer):
     crypto_type = serializers.ChoiceField(choices=RecentTransaction.CRYPTO_CHOICES)
+    withdrawal_address = serializers.CharField(required=True)
 
     class Meta:
         model = RecentTransaction
-        fields = ["amount", "crypto_type"]
+        fields = ["amount", "crypto_type", "withdrawal_address"]
 
     def validate(self, data):
         user = self.context["request"].user
         amount = data["amount"]
 
-        # Check if user.total is enough
         if user.total < amount:
             raise serializers.ValidationError({
                 "error": "Insufficient balance for this withdrawal."
@@ -85,11 +85,9 @@ class WithdrawalSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         amount = validated_data["amount"]
 
-        # Deduct from MAIN first (most exchanges do this)
         if user.main >= amount:
             user.main -= amount
         else:
-            # Deduct from both main + profit
             diff = amount - user.main
             user.main = 0
             user.profit -= diff
@@ -99,6 +97,7 @@ class WithdrawalSerializer(serializers.ModelSerializer):
         return RecentTransaction.objects.create(
             user=user,
             crypto_type=validated_data["crypto_type"],
+            withdrawal_address=validated_data["withdrawal_address"],
             amount=validated_data["amount"],
             transaction_type="withdrawal",
             transaction_status="pending",

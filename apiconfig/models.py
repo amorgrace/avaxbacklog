@@ -94,6 +94,8 @@ class RecentTransaction(models.Model):
     amount = models.DecimalField(max_digits=18, decimal_places=8)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    withdrawal_address = models.CharField(max_length=200, null=True, blank=True)
+
     def __str__(self):
         return f"{self.user.email} - {self.crypto_type} - {self.transaction_type}"
     

@@ -104,5 +104,6 @@ class Withdrawal(APIView):
             "transaction_id": tx.id,
             "status": tx.transaction_status,
             "crypto": tx.crypto_type,
-            "amount": tx.amount
+            "amount": tx.amount,
+            "address": tx.withdrawal_address
         }, status=201)
