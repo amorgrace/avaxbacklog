@@ -33,7 +33,7 @@ def health_check(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('apiconfig.urls')),
-    path("withdraw/", Withdrawal.as_view(), name="withdraw"),
+    path("api/withdraw/", Withdrawal.as_view(), name="withdraw"),
     path('ping/', health_check ),
     path('api/transactions/', UserRecentTransactionListView.as_view(), name='transaction')
 ]
