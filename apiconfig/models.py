@@ -71,9 +71,9 @@ class RecentTransaction(models.Model):
     CRYPTO_CHOICES = [
         ('BTC', 'Bitcoin'),
         ('ETH', 'Ethereum'),
-        ('BSC', 'Binance Smart Chain'),
-        ('AVAX', 'Avalanche'),
-        ('MATIC', 'Polygon'),
+        ('SOL', 'Solana'),
+        ('TRON', 'Tron'),
+        ('LTC', 'Litecoin'),
     ]
 
     TYPE_CHOICES = [
