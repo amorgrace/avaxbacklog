@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'dj_rest_auth',
     'corsheaders',
+    'drf_yasg',
     'core', # core is used for dbcheck
 ]
 
@@ -87,6 +88,18 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
 }
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',  # The header name
+            'in': 'header',
+            'description': 'Enter token like: Token your_token_here'
+        }
+    }
+}
+
 
 REST_AUTH = {
     'USE_JWT': False,

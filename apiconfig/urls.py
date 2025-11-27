@@ -10,3 +10,8 @@ urlpatterns = [
     path('user/', UserDetailsView.as_view(), name='rest_user_details'),
     path('change-password/', ChangePassword.as_view(), name='change_password'),
 ]
+
+{
+  "email": "akan@gmail.com",
+  "password": "amorgrace35"
+}

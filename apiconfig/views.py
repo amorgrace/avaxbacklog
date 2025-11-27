@@ -32,7 +32,7 @@ class RegisterView(generics.CreateAPIView):
 
 class CustomLoginView(LoginView):
     def post(self, request, *args, **kwargs):
-        print("🔥 CustomLoginView called")
+        print("CustomLoginView called")
         serializer = self.get_serializer(data=request.data)
 
         try:
@@ -88,22 +88,6 @@ class ChangePassword(APIView):
         return Response({'detail': 'Password updated successfully.'}, status=status.HTTP_200_OK)
 
 
-class Withdrawal(APIView):
+class Withdrawal(generics.CreateAPIView):
+    serializer_class = WithdrawalSerializer
     permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        serializer = WithdrawalSerializer(
-            data=request.data,
-            context={"request": request}
-        )
-        serializer.is_valid(raise_exception=True)
-        tx = serializer.save()
-
-        return Response({
-            "message": "Withdrawal initiated",
-            "transaction_id": tx.id,
-            "status": tx.transaction_status,
-            "crypto": tx.crypto_type,
-            "amount": tx.amount,
-            "address": tx.withdrawal_address
-        }, status=201)

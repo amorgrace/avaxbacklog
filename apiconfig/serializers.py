@@ -18,7 +18,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = CustomUser.objects.create_user(
             email=validated_data['email'],
-            password=validated_data['password'],  # Fix typo
+            password=validated_data['password'],  
             fullname=validated_data['fullname']
         )
         return user
@@ -63,7 +63,8 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 
 class WithdrawalSerializer(serializers.ModelSerializer):
-    crypto_type = serializers.ChoiceField(choices=RecentTransaction.CRYPTO_CHOICES)
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2, required=True)
+    crypto_type = serializers.ChoiceField(choices=RecentTransaction.CRYPTO_CHOICES, required=True)
     withdrawal_address = serializers.CharField(required=True)
 
     class Meta:
