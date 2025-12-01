@@ -5,7 +5,7 @@ from rest_framework.exceptions import ValidationError
 from .serializers import UserRegisterSerializer, UserSerializer
 from dj_rest_auth.views import LoginView, LogoutView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import RecentTransactionSerializer, ChangePasswordSerializer, WithdrawalSerializer
+from .serializers import *
 from .models import RecentTransaction
 from rest_framework.views import APIView
 class RegisterView(generics.CreateAPIView):
@@ -91,3 +91,11 @@ class ChangePassword(APIView):
 class Withdrawal(generics.CreateAPIView):
     serializer_class = WithdrawalSerializer
     permission_classes = [IsAuthenticated]
+
+class SubmitKYC(generics.CreateAPIView):
+    serializer_class = KYCSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+

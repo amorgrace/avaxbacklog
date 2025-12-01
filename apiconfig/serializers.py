@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from .models import RecentTransaction
+from .models import *
 
 
 
@@ -27,12 +27,11 @@ class UserSerializer(serializers.ModelSerializer):
     total = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     class Meta:
         model = CustomUser
-        fields = ('id', 'fullname', 'email', 'main', 'profit', 'total', 'kyc_status',)
+        fields = ('id', 'fullname', 'email', 'main', 'profit', 'total')
         extra_kwargs = {
             'id': {'read_only': True},
             'main': {'read_only': True},
             'profit': {'read_only': True},
-            'kyc_status': {'read_only': True},
             'fullname': {'read_only': True},
             'email': {'read_only': True},
             
@@ -103,3 +102,10 @@ class WithdrawalSerializer(serializers.ModelSerializer):
             transaction_type="withdrawal",
             transaction_status="pending",
         )
+
+
+class KYCSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KYC
+        fields = ['user', 'kyc_status', 'image_url', 'created_at']
+        read_only_fields = ['kyc_status']

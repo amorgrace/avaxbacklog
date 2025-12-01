@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 from decouple import config
+import cloudinary.uploader
+import cloudinary.api
 import dj_database_url
-
+import cloudinary
 
 
 
@@ -64,6 +66,7 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'corsheaders',
     'drf_yasg',
+    'cloudinary',
     'core', # core is used for dbcheck
 ]
 
@@ -157,7 +160,11 @@ DATABASES = {
     }
 }
 
-
+cloudinary.config( 
+    cloud_name=config("CLOUDINARY_CLOUD_NAME"),
+    api_key=config("CLOUDINARY_API_KEY"),
+    api_secret=config("CLOUDINARY_API_SECRET"),
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

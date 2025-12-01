@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
-from apiconfig.views import UserRecentTransactionListView, Withdrawal
+from apiconfig.views import *
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -48,6 +48,7 @@ urlpatterns = [
     path('api/auth/', include('apiconfig.urls')),
     path("api/withdraw/", Withdrawal.as_view(), name="withdraw"),
     path('ping/', health_check ),
+    path('kyc/', SubmitKYC.as_view(), name='submit-kyc'),
     path('api/transactions/', UserRecentTransactionListView.as_view(), name='transaction'),
 
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',

@@ -32,25 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     main = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     profit = models.DecimalField(default=0, max_digits=12, decimal_places=2)
 
-    KYC_STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_review', 'In Review'),
-        ('confirmed', 'Confirmed'),
-    ]
 
-    kyc_status = models.CharField(
-        max_length=20,
-        choices=KYC_STATUS_CHOICES,
-        default='pending'
-    )
-
-    KYC_STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_review', 'In Review'),
-        ('confirmed', 'Confirmed'),
-    ]
-
-    kyc_photo = models.ImageField(upload_to='kyc_photos/', null=True, blank=True)
 
     # this @property is called when we need to define total so that django knows it is a property of the user
     @property
@@ -102,3 +84,18 @@ class RecentTransaction(models.Model):
     def time_since_created(self):
         from django.utils.timesince import timesince
         return timesince(self.created_at) + " ago"
+    
+class KYC(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_review', 'In Review'),
+        ('approved', 'Approved'),
+    ]
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='kyc_records')
+    kyc_status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    image_url = models.URLField(max_length=500)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.email} - {self.kyc_status}"
