@@ -2,10 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from .models import *
+from django.db import transaction
+from decimal import Decimal
 
 
-
-CustomUser = get_user_model()  # Call the function to get the model
+CustomUser = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
@@ -46,7 +47,7 @@ class CustomTokenSerializer(serializers.ModelSerializer):
 
 
 class RecentTransactionSerializer(serializers.ModelSerializer):
-    time_since_created = serializers.SerializerMethodField
+    time_since_created = serializers.SerializerMethodField()
 
     class Meta:
         model = RecentTransaction
@@ -109,3 +110,54 @@ class KYCSerializer(serializers.ModelSerializer):
         model = KYC
         fields = ['user', 'kyc_status', 'image_url', 'created_at']
         read_only_fields = ['kyc_status']
+
+
+class InvestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecentTransaction
+        fields = ['crypto_type', 'amount']
+        extra_kwargs = {
+            'crypto_type': {
+                'required': True,
+                'help_text': 'Choose the cryptocurrency you want to invest in'
+            },
+            'amount': {
+                'required': True,
+                'min_value': Decimal('0.01'),
+                'help_text': 'Investment amount (must be greater than 0)'
+            }
+        }
+
+    def validate_amount(self, value):
+        user = self.context["request"].user
+        
+        if value <= 0:
+            raise serializers.ValidationError("Investment amount must be greater than zero.")
+            
+        if user.main < value:
+            raise serializers.ValidationError(
+                f"Insufficient balance. Your main balance is {user.main} but you tried to invest {value}"
+            )
+        
+        return value
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+        amount = validated_data["amount"]
+        crypto = validated_data["crypto_type"]
+
+        with transaction.atomic():
+            # Deduct from main balance
+            user.main -= Decimal(amount)
+            user.save(update_fields=['main'])
+
+            # Create the transaction
+            transaction_instance = RecentTransaction.objects.create(
+                user=user,
+                crypto_type=crypto,
+                transaction_type="investment",
+                transaction_status="confirmed",
+                amount=amount,
+            )
+        
+        return transaction_instance

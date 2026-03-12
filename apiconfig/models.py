@@ -32,9 +32,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     main = models.DecimalField(default=0, max_digits=12, decimal_places=2)
     profit = models.DecimalField(default=0, max_digits=12, decimal_places=2)
 
-
-
-    # this @property is called when we need to define total so that django knows it is a property of the user
     @property
     def total(self):
         return self.main + self.profit
@@ -61,6 +58,7 @@ class RecentTransaction(models.Model):
     TYPE_CHOICES = [
         ('deposit', 'Deposit'),
         ('withdrawal', 'Withdrawal'),
+        ('investment', 'Investment'),
 
     ]
 
@@ -73,7 +71,7 @@ class RecentTransaction(models.Model):
     crypto_type = models.CharField(max_length=10, choices=CRYPTO_CHOICES)
     transaction_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     transaction_status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-    amount = models.DecimalField(max_digits=18, decimal_places=8)
+    amount = models.DecimalField(max_digits=18, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
     withdrawal_address = models.CharField(max_length=200, null=True, blank=True)

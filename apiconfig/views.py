@@ -7,7 +7,14 @@ from dj_rest_auth.views import LoginView, LogoutView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import *
 from .models import RecentTransaction
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+
+from rest_framework.generics import GenericAPIView
+
 from rest_framework.views import APIView
+from django.db import transaction
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
@@ -99,3 +106,46 @@ class SubmitKYC(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
+
+class InvestView(generics.CreateAPIView):
+    serializer_class = InvestSerializer
+    permission_classes = [IsAuthenticated]
+
+    # 🔥 THIS IS THE ONLY PLACE THE DECORATOR WORKS FOR CreateAPIView
+    @swagger_auto_schema(
+        operation_description="Make a new investment (deducts from main balance)",
+        request_body=InvestSerializer,
+        responses={
+            201: openapi.Response(
+                description="Investment successful",
+                examples={
+                    "application/json": {
+                        "message": "Investment successful",
+                        "transaction": {
+                            "crypto": "BTC",
+                            "amount": "500.00",
+                            "type": "investment",
+                            "status": "confirmed",
+                            "time": "just now"
+                        }
+                    }
+                }
+            ),
+            400: "Validation error (insufficient balance, amount <= 0, etc.)"
+        }
+    )
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        tx = serializer.save()
+
+        return Response({
+            "message": "Investment successful",
+            "transaction": {
+                "crypto": tx.crypto_type,
+                "amount": str(tx.amount),
+                "type": tx.transaction_type,
+                "status": tx.transaction_status,
+                "time": tx.time_since_created()
+            }
+        }, status=status.HTTP_201_CREATED)
