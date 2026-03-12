@@ -41,8 +41,9 @@ ALLOWED_HOSTS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'https://avaxtrade.vercel.app',
+    'https://avaxtrading.com',
     'http://localhost:5173',
+
     
 ]
 
