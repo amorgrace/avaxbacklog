@@ -53,6 +53,7 @@ class RecentTransaction(models.Model):
         ('SOL', 'Solana'),
         ('TRON', 'Tron'),
         ('LTC', 'Litecoin'),
+        ('USDT', 'Usdt'),
     ]
 
     TYPE_CHOICES = [
